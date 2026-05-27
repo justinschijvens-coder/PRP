@@ -1,0 +1,62 @@
+version: '1.0'
+
+services:
+
+  apache-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: Orthia-apache
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - ./website:/usr/local/apache2/htdocs:ro
+
+    restart: unless-stopped
+
+    networks:
+      - pandemie-network
+
+
+
+  jenkins:
+    image: jenkins/jenkins:lts
+
+    container_name: pandemie-jenkins
+
+    privileged: true
+
+    user: root
+
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./:/workspace
+
+    restart: unless-stopped
+
+    networks:
+      - pandemie-network
+
+
+
+networks:
+  pandemie-network:
+    driver: bridge
+
+
+
+volumes:
+  jenkins_home:
+
+  
+FROM httpd:2.4
+
+COPY ./website/ /usr/local/apache2/htdocs/
