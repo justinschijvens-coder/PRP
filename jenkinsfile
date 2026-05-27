@@ -6,22 +6,16 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/justinschijvens-coder/PRP.git .'
+                    url: 'https://github.com/JOUW_GITHUB/PRP.git'
             }
         }
 
-        stage('Build Docker image') {
-            steps {
-                sh 'docker build -t apache2-orthia .'
-            }
-        }
-
-        stage('Run container') {
+        stage('Build & Deploy') {
             steps {
                 sh '''
-                    docker stop apache2-orthia || true
-                    docker rm apache2-orthia || true
-                    docker run -d -p 8080:80 --name apache2-orthia apache2-orthia
+                    docker compose down || true
+                    docker compose build
+                    docker compose up -d
                 '''
             }
         }
