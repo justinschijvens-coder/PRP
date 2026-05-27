@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS patients (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO patients (name, status)
+INSERT INTO patients (name, getekend)
 VALUES
-('Jan Jansen', 'Hersteld'),
-('Maria de Vries', 'In behandeling');
+('Jaap Jansen', 'ja'),
+('arnoud', 'nee');
