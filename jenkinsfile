@@ -6,11 +6,11 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/justinschijvens-coder/PRP.git'
+                    url: 'https://github.com/JOUW_REPO.git'
             }
         }
 
-        stage('Build & Deploy') {
+        stage('Deploy containers') {
             steps {
                 sh '''
                     docker compose down || true
