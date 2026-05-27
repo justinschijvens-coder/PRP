@@ -1,21 +1,27 @@
-version: '1.0'
+version: '3.8'
 
 services:
 
-  apache-webserver:
-    build:
-      context: .
-      dockerfile: Docker-file.yml
-
-    container_name: Orthia-apache
-
+  apache:
+    build: .
+    container_name: apache-web
     ports:
-      - "81:80"
+      - "8080:80"
+    depends_on:
+      - db
 
+  db:
+    image: mariadb:11
+    container_name: maria-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    ports:
+      - "3306:3306"
     volumes:
-      - ./website:/usr/local/apache2/htdocs:ro
+      - db_data:/var/lib/mysql
 
-    restart: unless-stopped
-
-    networks:
-      - pandemie-network
+volumes:
+  db_data:
