@@ -6,7 +6,7 @@ services:
     build: .
     container_name: apache-web
     ports:
-      - "8:80"
+      - "8080:80"
     depends_on:
       - db
 
@@ -20,8 +20,3 @@ services:
       MYSQL_PASSWORD: userpass
     ports:
       - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-
-volumes:
-  db_data:
