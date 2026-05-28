@@ -1,15 +1,6 @@
-CREATE DATABASE IF NOT EXISTS orthia;
-
-USE orthia;
-
-CREATE TABLE IF NOT EXISTS patients (
+CREATE TABLE IF NOT EXISTS signatures (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    getekend VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    name VARCHAR(255),
+    signature LONGTEXT,
+    signed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT INTO patients (name, getekend)
-VALUES
-('Jaap Jansen', 'ja'),
-('arnoud', 'nee');
