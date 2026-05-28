@@ -6,7 +6,7 @@ services:
     image: php:8.2-apache
     container_name: apache-web
     ports:
-      - "8081:80"
+      - "8082:80"
     volumes:
       - ./website:/var/www/html
     depends_on:
