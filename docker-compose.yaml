@@ -2,22 +2,32 @@ version: '3.9'
 
 services:
 
-  apache-web:
-    build: .
-    container_name: apache-web
-    ports:
-      - "8082:80"
-    depends_on:
-      - orthia-db
-
   orthia-db:
     image: mariadb:11
     container_name: orthia-db
     restart: always
+
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: orthia
       MYSQL_USER: orthia
       MYSQL_PASSWORD: orthia
+
     ports:
       - "3306:3306"
+
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  apache-web:
+    image: php:8.2-apache
+    container_name: apache-web
+
+    ports:
+      - "8082:80"
+
+    volumes:
+      - ./website:/var/www/html
+
+    depends_on:
+      - orthia-db
