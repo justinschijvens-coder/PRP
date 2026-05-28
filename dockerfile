@@ -1,2 +1,5 @@
-FROM httpd:2.4
-COPY ./website/ /usr/local/apache2/htdocs/
+FROM php:8.2-apache
+
+RUN docker-php-ext-install mysqli
+
+COPY ./website/ /var/www/html/
