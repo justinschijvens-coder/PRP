@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   apache-web:
-    image: php:8.2-apache
+    image: apache2:latest
     container_name: apache-web
     ports:
       - "8082:80"
