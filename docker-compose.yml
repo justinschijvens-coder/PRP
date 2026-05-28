@@ -17,10 +17,10 @@ services:
     container_name: orthia-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: orthia
       MYSQL_USER: orthia
-      MYSQL_PASSWORD: secret
+      MYSQL_PASSWORD: orthia
     ports:
       - "3306:3306"
 
@@ -32,7 +32,7 @@ services:
       - "8082:80"
     environment:
       PMA_HOST: orthia-db
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: orthia
     depends_on:
       - orthia-db
 ```
