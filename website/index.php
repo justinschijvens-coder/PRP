@@ -1,82 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
-    <title>Orthia Aftekenen</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orthia Veiligheidsprotocol</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background:#f4f4f4;
+            margin:0;
+            padding:0;
+        }
+
+        .container{
+            width:80%;
+            margin:auto;
+            padding:20px;
+        }
+
+        .content{
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1{
+            color:#0066cc;
+        }
+
+        ul{
+            line-height:2;
+        }
+
+        /* Klein formulier onderaan */
+
+        .sign-form{
+            margin-top:40px;
+            padding:15px;
+            width:300px;
+            background:#fafafa;
+            border:1px solid #ddd;
+            border-radius:8px;
+        }
+
+        .sign-form input{
+            width:100%;
+            padding:8px;
+            margin-top:10px;
+            margin-bottom:10px;
+        }
+
+        .sign-form button{
+            width:100%;
+            padding:10px;
+            background:#0066cc;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+
+        .sign-form button:hover{
+            background:#004999;
+        }
+
+    </style>
 </head>
 <body>
 
-<h1>Orthia - Aftekenen</h1>
+<div class="container">
 
-<form method="POST" action="save.php">
+    <div class="content">
 
-    <input type="text" name="name" placeholder="Naam" required>
+        <h1>Orthia Veiligheidsprotocol</h1>
 
-    <h3>Handtekening:</h3>
+        <p>
+            Hieronder staan de basismaatregelen voor veiligheid en hygiëne.
+        </p>
 
-    <canvas id="signature-pad" width="400" height="200"></canvas>
+        <ul>
+            <li>Handen regelmatig wassen</li>
+            <li>Gebruik van beschermende kleding</li>
+            <li>Werkplekken schoonhouden</li>
+            <li>Veilig omgaan met patiënten</li>
+            <li>Meld ziekteverschijnselen direct</li>
+        </ul>
 
-    <input type="hidden" name="signature" id="signature">
+        <!-- Klein formulier onder website -->
 
-    <br><br>
+        <div class="sign-form">
 
-    <button type="submit">Aftekenen</button>
+            <h3>Aftekenen</h3>
 
-    <button type="button" onclick="clearPad()">Wissen</button>
+            <form action="save.php" method="POST">
 
-</form>
+                <input type="text" name="name" placeholder="Naam" required>
 
-<script>
+                <input type="text" name="signature" placeholder="Handtekening" required>
 
-const canvas = document.getElementById('signature-pad');
-const ctx = canvas.getContext('2d');
+                <button type="submit">Opslaan</button>
 
-let drawing = false;
+            </form>
 
-canvas.addEventListener('mousedown', start);
-canvas.addEventListener('mouseup', stop);
-canvas.addEventListener('mousemove', draw);
+        </div>
 
-function start(e) {
-    drawing = true;
-    draw(e);
-}
+    </div>
 
-function stop() {
-    drawing = false;
-    ctx.beginPath();
-
-    document.getElementById('signature').value =
-        canvas.toDataURL();
-}
-
-function draw(e) {
-
-    if (!drawing) return;
-
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-
-    ctx.lineTo(
-        e.offsetX,
-        e.offsetY
-    );
-
-    ctx.stroke();
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        e.offsetX,
-        e.offsetY
-    );
-}
-
-function clearPad() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-</script>
+</div>
 
 </body>
 </html>
