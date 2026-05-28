@@ -1,5 +1,3 @@
-# docker-compose.yml
-
 version: '3.9'
 
 services:
@@ -21,7 +19,7 @@ services:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: orthia
       MYSQL_USER: orthia
-      MYSQL_PASSWORD: secret
+      MYSQL_PASSWORD: orthia
     ports:
       - "3306:3306"
 
