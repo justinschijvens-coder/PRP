@@ -1,13 +1,12 @@
 version: '3.9'
 
 services:
+
   apache-web:
-    image: apache2:latest
+    build: .
     container_name: apache-web
     ports:
       - "8082:80"
-    volumes:
-      - ./website:/var/www/html
     depends_on:
       - orthia-db
 
@@ -22,15 +21,3 @@ services:
       MYSQL_PASSWORD: orthia
     ports:
       - "3306:3306"
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
-    restart: always
-    ports:
-      - "8082:80"
-    environment:
-      PMA_HOST: orthia-db
-      MYSQL_ROOT_PASSWORD: orthia
-    depends_on:
-      - orthia-db
