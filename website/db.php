@@ -1,7 +1,7 @@
 <?php
 
 $conn = new mysqli(
-    "orthia-db",
+    "orthia",
     "orthia",
     "orthia",
     "orthia"
