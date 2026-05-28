@@ -1,28 +1,38 @@
-version: '3.8'
+# docker-compose.yml
+
+version: '3.9'
 
 services:
-
-  apache:
-    build: .
+  apache-web:
+    image: php:8.2-apache
     container_name: apache-web
     ports:
       - "8081:80"
+    volumes:
+      - ./website:/var/www/html
     depends_on:
-      - db
+      - orthia-db
 
-  db:
+  orthia-db:
     image: mariadb:11
     container_name: orthia-db
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: ortia
-      MYSQL_USER: justin
-      MYSQL_PASSWORD: @@rdaPPel23
+      MYSQL_DATABASE: orthia
+      MYSQL_USER: orthia
+      MYSQL_PASSWORD: secret
     ports:
       - "3306:3306"
-      volumes:
-      - db_data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-volumes:
-  db_data:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: orthia-db
+      MYSQL_ROOT_PASSWORD: rootpass
+    depends_on:
+      - orthia-db
