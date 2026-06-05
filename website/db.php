@@ -2,9 +2,9 @@
 
 $conn = new mysqli(
     "orthia-db",
-    "orthia-db",
-    "orthia-db",
-    "orthia-db"
+    "orthia",
+    "orthia",
+    "orthia"
 );
 
 if ($conn->connect_error) {
