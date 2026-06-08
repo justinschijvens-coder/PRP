@@ -16,7 +16,7 @@ services:
 
     volumes:
       - orthia-db-data:/var/lib/mysql
-      - db:/docker-entrypoint-initdb.d/:ro
+      - ./db:/docker-entrypoint-initdb.d/:ro
 
   apache-web:
     build:
