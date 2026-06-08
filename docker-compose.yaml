@@ -1,6 +1,7 @@
 version: '3.9'
 
 services:
+
   orthia-db:
     image: mariadb:11
     container_name: orthia-db
@@ -19,9 +20,6 @@ services:
       - orthia-db-data:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-volumes:
-  orthia-db-data:
-  
   apache-web:
     build:
       context: .
@@ -32,3 +30,6 @@ volumes:
 
     depends_on:
       - orthia-db
+
+volumes:
+  orthia-db-data:
