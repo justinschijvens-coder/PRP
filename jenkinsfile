@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/justinschijvens-coder/PRP.git'
+                     sh '''
+echo "=== CHECK WORKSPACE ==="
+pwd
+ls -R
+
+echo "=== DB FILE CHECK ==="
+ls -lah db || true
+file db/init.sql || true
+cat db/init.sql || true
+'''
+            }
+        }
+        
+                stage('Stop containers') {
+            steps {
+                sh '''
+                    docker rm -f apache-web || true
+                    docker rm -f orthia-db || true
+                    docker compose down -v || true
+                '''
+            }
+        }
+       stage('Build and Start Containers') {
+            steps {
+                sh 'docker compose pull'
+                sh 'docker compose up -d --build'
+            }
+        }
+
+        stage('Geforceerd Database Initialiseren') {
+            steps {
+                echo "Wachten tot MariaDB klaar is..."
+                // Geef de database 10 seconden om intern op te starten
+                sleep 10
+                
+                echo "init.sql rechtstreeks in de database schieten..."
+                // Dit commando heeft GEEN mounts nodig; het leest het bestand direct vanaf de Jenkins-schijf
+                sh 'docker exec -i orthia-db mariadb -u orthia -porthia orthia < db/init.sql'
+                
+                echo "Database succesvol bijgewerkt!"
+            }
+        }
+    }
+}
