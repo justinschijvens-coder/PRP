@@ -2,16 +2,13 @@
 
 ## Start omgeving
 
-docker compose up -d
+plaats de jenkinsfile in jenkins en run het
 
 ## Apache website
 
-http://localhost:8080
+http://localhost:8082
 
 ## Jenkins
 
-http://localhost:8081
+http://localhost:8080
 
-## Jenkins initial admin password
-
-docker exec pandemie-jenkins cat /var/jenkins_home/secrets/initialAdminPassword
