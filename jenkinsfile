@@ -1,51 +1,94 @@
 pipeline {
     agent any
 
+    environment {
+        DB_ROOT_PASSWORD = credentials('orthia-db-root-password') 
+        DB_NAME          = credentials('orthia-db-name')          
+        DB_USER          = credentials('orthia-db-user')          
+        DB_PASSWORD      = credentials('orthia-db-password')      
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/justinschijvens-coder/PRP.git'
-                     sh '''
-echo "=== CHECK WORKSPACE ==="
-pwd
-ls -R
-
-echo "=== DB FILE CHECK ==="
-ls -lah db || true
-file db/init.sql || true
-cat db/init.sql || true
-'''
             }
         }
-        
-                stage('Stop containers') {
+
+        stage('Check for Changes') {
+            steps {
+                script {
+                    try {
+                        def changedFiles = sh(
+                            script: "git diff HEAD~1 HEAD --name-only",
+                            returnStdout: true
+                        ).trim()
+
+                        if (!changedFiles) {
+                            currentBuild.result = 'SUCCESS'
+                            error("Geen wijzigingen gevonden. Pipeline gestopt.")
+                        }
+                        echo "Gewijzigde bestanden:\n${changedFiles}"
+                    } catch (Exception e) {
+                        echo "Eerste build of ondiepe kloon. We gaan door met de build."
+                    }
+                }
+            }
+        }
+
+        stage('Code Quality Check') {
             steps {
                 sh '''
-                    docker rm -f apache-web || true
-                    docker rm -f orthia-db || true
-                    docker compose down -v || true
+                    echo "Code controleren..."
+                    if command -v php &> /dev/null; then
+                        find . -name "*.php" -exec php -l {} \\;
+                    else
+                        echo "PHP is niet geïnstalleerd op deze Jenkins node, overgeslagen."
+                    fi
                 '''
             }
         }
-       stage('Build and Start Containers') {
+
+        stage('Snyk IaC Scan') {
             steps {
-                sh 'docker compose pull'
-                sh 'docker compose up -d --build'
+                withCredentials([string(credentialsId: 'snyk-token-string', variable: 'SNYK_TOKEN')]) {
+                    script {
+                        def snykHome = tool name: 'Snyk', type: 'io.snyk.jenkins.tools.SnykInstallation'
+                        
+                        echo "Snyk controleert docker-compose.yaml en stuurt rapport naar snyk.io..."
+                        // `--report` zorgt ervoor dat je de resultaten op je online Snyk dashboard ziet!
+                        sh "${snykHome}/snyk iac test docker-compose.yaml --project-name=PRP --report || true"
+                    }
+                }
             }
         }
 
-        stage('Geforceerd Database Initialiseren') {
+        stage('Deploy') {
             steps {
-                echo "Wachten tot MariaDB klaar is..."
-                // Geef de database 10 seconden om intern op te starten
-                sleep 10
-                
-                echo "init.sql rechtstreeks in de database schieten..."
-                // Dit commando heeft GEEN mounts nodig; het leest het bestand direct vanaf de Jenkins-schijf
-                sh 'docker exec -i orthia-db mariadb -u orthia -porthia orthia < db/init.sql'
-                
-                echo "Database succesvol bijgewerkt!"
+                sh '''
+                    echo "Oude containers en volumes volledig vernietigen voor een schone lei..."
+                    docker compose down -v 
+                    
+                    echo "Nieuwe containers opbouwen..."
+                    docker compose pull
+                    docker compose up -d --build
+                '''
+            }
+        }
+
+        stage('Database Init') {
+            steps {
+                echo "Wachten tot MariaDB volledig is opgestart..."
+                sleep 15 
+
+                sh '''
+                    echo "Importing database met ROOT rechten..."
+                    # We gebruiken nu -u root en $DB_ROOT_PASSWORD om de blokkade te omzeilen
+                    docker exec -i orthia-db \
+                    mariadb -u root -p$DB_ROOT_PASSWORD -D $DB_NAME < db/init.sql
+                '''
+                echo "Database succesvol geïnitialiseerd!"
             }
         }
     }
