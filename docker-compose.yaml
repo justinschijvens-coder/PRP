@@ -9,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: orthia
       MYSQL_USER: orthia
-      MYSQL_PASSWORD: orthia
+      MYSQL_PASSWORD: debian
 
     ports:
       - "3306:3306"
