@@ -3,7 +3,7 @@
 $conn = new mysqli(
     "orthia-db",
     "orthia",
-    "orthia",
+    "debian",
     "orthia"
 );
 
