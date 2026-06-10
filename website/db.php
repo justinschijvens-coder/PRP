@@ -1,14 +1,14 @@
 <?php
 
 $conn = new mysqli(
-    "orthia-db",
-    "root",
-    "orthia",
-    "orthia"
+    getenv('DB_HOST'),
+    getenv('DB_USER'),
+    getenv('DB_PASSWORD'),
+    getenv('DB_NAME')
 );
 
 if ($conn->connect_error) {
-    die("Database fout");
+    die("Database fout"); 
 }
 
 ?>
