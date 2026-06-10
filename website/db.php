@@ -2,8 +2,8 @@
 
 $conn = new mysqli(
     "orthia-db",
+    "root",
     "orthia",
-    "debian",
     "orthia"
 );
 
