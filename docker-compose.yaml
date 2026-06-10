@@ -5,11 +5,11 @@ services:
     container_name: orthia-db
     restart: always
 
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: orthia
-      MYSQL_USER: orthia
-      MYSQL_PASSWORD: debian
+   environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
 
     ports:
       - "3306:3306"
