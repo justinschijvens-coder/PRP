@@ -2,7 +2,7 @@ version: '3.8'
 services:
 
   orthia-db:
-    image: mariadb:11
+    image: mariadb:latest
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
