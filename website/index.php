@@ -223,7 +223,7 @@
 
     <footer>
         © 2026 Orthia - Veiligheidsportaal
-        <span class="version">v1.0.0</span>
+        <span class="version">v1.2</span>
     </footer>
 
 </body>
