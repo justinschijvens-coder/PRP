@@ -26,11 +26,11 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
     volumes:
-      # NIEUW: Dit zorgt ervoor dat je websitecode (HTML/PHP) ook bewaard blijft!
-      - orthia-web-data:/var/www/html
+      # Bind mount: koppelt de huidige Jenkins werkmap rechtstreeks aan de container
+      - .:/var/www/html
     depends_on:
       - orthia-db
-
+      
 volumes:
   orthia-db-data:
   # NIEUW: Het volume voor de webserver data hier registreren
