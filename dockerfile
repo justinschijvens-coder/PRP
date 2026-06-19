@@ -1,4 +1,4 @@
-FROM php:8.5.7RC2-apache
+FROM php:8.5.7-apache
 
 COPY website/ /var/www/html/
 
